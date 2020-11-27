@@ -16,13 +16,16 @@ class Product extends CI_Controller {
     );
     $this->load->library('slug', $config);
   }
-
-  public function index()
+  public function index(){
+    $this->load->view('product/index.php');
+  }
+  public function getData()
   {
     $products = $this->productModel->getAllProducts();
     $categories = $this->categoryModel->getAllCategories();
+
+    echo json_encode(['status' => 'success', 'message' => 'Store product succesfully', 'data' => ['products' => $products, 'categories' => $categories]]);
     
-    $this->load->view('product/index.php', ['products' => $products, 'categories' => $categories]);
   }
 
   public function store(){
