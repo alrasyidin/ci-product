@@ -1,4 +1,5 @@
 <?php
+ini_set('date.timezone', 'Asia/Jakarta');
 /**
  * CodeIgniter
  *

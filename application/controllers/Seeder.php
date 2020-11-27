@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Seeder extends CI_Controller {
   public function __construct(){
-    date_default_timezone_set('Asia/Jakarta');
+    // date_default_timezone_set('Asia/Jakarta');
 
     parent::__construct();
 
