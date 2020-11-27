@@ -1,3 +1,7 @@
+<?php 
+    // print_r($products);
+    // die();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -170,7 +174,7 @@
                                   <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                       <thead>
                                           <tr>
-                                              <th>No</th>
+                                              <th>ID</th>
                                               <th>Name</th>
                                               <th>Description</th>
                                               <th>Category</th>
@@ -181,7 +185,7 @@
                                         </thead>
                                         <tfoot>
                                             <tr>
-                                                <th>No</th>
+                                                <th>ID</th>
                                                 <th>Name</th>
                                                 <th>Description</th>
                                                 <th>Category</th>
@@ -191,18 +195,20 @@
                                           </tr>
                                       </tfoot>
                                       <tbody>
-                                          <?php
-                                            $i = 1;
-                                            foreach ($products as $product):
-                                          ?>
+                                          <?php 
+                                          
+                                          foreach ($products as $product): ?>
                                             <tr>
-                                                <td><?=$i++?></td>
-                                                <td><?= ucfirst($product->name) ?></td>
-                                                <td><?=substr($product->description, 0, 100) . '...'?></td>
-                                                <td><?= ucfirst($product->category)  ?></td>
+                                                <td><?= $product->id ?></td>
+                                                <td><?=ucfirst($product->name)?></td>
+                                                <td><?= (strlen($product->description) > 50) ? substr($product->description, 0, 100) . '...' : $product->description?></td>
+                                                <td><?= ucfirst($product->category) ?></td>
                                                 <td><?=$product->status ? '<span class="badge badge-primary">Active</span>' : '<span class="badge badge-danger">Non Active</span>'?></td>
                                                 <td><?=date('d-m-Y', time($product->created_at));?></td>
-                                                <td>TODO: Update and delete</td>
+                                                <td class="d-flex">
+                                                    <button class="btn btn-danger btn-sm product-delete mr-2" data-id="<?= $product->id ?>">DELETE</button>
+                                                    <button id="product-<?= $product->id ?>" class="btn btn-warning btn-sm product-edit">EDIT</button>
+                                                </td>
                                             </tr>
                                           <?php endforeach;?>
                                       </tbody>
@@ -244,6 +250,8 @@
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
+              <form id="productAdd" method="post">
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Create Product</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
@@ -251,7 +259,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="post">
                         <div class="form-group">
                             <label for="productName">Product Name: </label>
                             <input class="form-control" type="text" name="name" id="productName">
@@ -263,26 +270,33 @@
                         <div class="form-group">
                             <label for="status">Status: </label>
                             <select class="form-control" name="status" id="status">
-                                <option value="">--- Status ---</option>
+                                <option value="" disabled selected>--- Status ---</option>
                                 <option value="0">Non Active</option>
                                 <option value="1">Active</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="status">Category: </label>
-                            <select class="form-control" name="status" id="status">
-                                <option value="">--- Category ---</option>
+                            <label for="category">Category: </label>
+                            <select class="form-control" name="category_id" id="category">
+                                <option value="" disabled selected>--- Category ---</option>
+                                <?php foreach($categories as $category): ?>
+                                    <option value="<?= $category->id ?>"><?= ucfirst($category->name) ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Save</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
+
+              </form>
             </div>
         </div>
     </div>
+    <script>
+        window.base_url = '<?= base_url() ?>'
+    </script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="<?=base_url('assets/jquery/jquery.min.js');?>"></script>

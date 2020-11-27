@@ -7,15 +7,43 @@ class Product extends CI_Controller {
     parent::__construct();
 
     $this->load->model('Product_model', 'productModel');
+    $this->load->model('Category_model', 'categoryModel');
+
+    $config = array(
+      'table' => 'products',
+      'field' => 'slug',
+      'title' => 'name',
+    );
+    $this->load->library('slug', $config);
   }
 
   public function index()
   {
     $products = $this->productModel->getAllProducts();
-    // echo '<pre>';
-    // var_dump($products);
-    // die();
-    $this->load->view('product/index.php', ['products' => $products]);
+    $categories = $this->categoryModel->getAllCategories();
+    
+    $this->load->view('product/index.php', ['products' => $products, 'categories' => $categories]);
+  }
+
+  public function store(){
+    $product = $this->input->post();
+    $product['slug'] = $this->slug->create_uri($product);
+    
+    $result = $this->productModel->storeProduct($product);
+    
+    if($result){
+      echo json_encode(['status' => 'success', 'message' => 'Store product succesfully', 'data' => $result]);
+    }
+  }
+  
+  public function delete(){
+    $id = $this->input->post('id');
+    
+    $result = $this->productModel->deleteProduct($id);
+  
+    if($result){
+      echo json_encode(['status' => 'success', 'message' => 'This product deleted successfully']);
+    }
   }
 }
 
