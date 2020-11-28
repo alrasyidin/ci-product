@@ -25,7 +25,7 @@ class Seeder extends CI_Controller {
   {
     $categories = [];
 
-    for ($i=0; $i < 10; $i++) { 
+    for ($i=0; $i < 20; $i++) { 
       $categories[$i]['name'] = $this->faker->words(rand(1, 2), true);
     }
 
@@ -55,12 +55,16 @@ class Seeder extends CI_Controller {
             'name' => $this->faker->words(rand(4, 7), true),
             'description' => $this->faker->paragraphs(rand(5, 10), true),
             'category_id' => $category->id,
+            // 'created_at' => date(rand(2019, 2020))
+            // 'updated_at' =>
           ];
           $product['slug'] = $this->slug->create_uri($product);
 
           $this->productModel->insertRandomProducts($product);
         }
       }
+
+      echo 'berhasil save data product';
     } else {
       echo 'harap lakukan seeder untuk kategori terlebih dahulu';
     }

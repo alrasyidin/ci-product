@@ -31,9 +31,18 @@
             align-items: center;
         }
 
-        /* body{
-            position: relative;
-        } */
+        .error{
+            font-size: 1em;
+            width: 100%;
+        }
+
+        input.error, select.error, textarea.error{
+            border: 1px solid red;
+        }
+
+        label.error{
+            color: red;
+        }
     </style>
 </head>
 
@@ -244,8 +253,7 @@
     <div class="modal fade" id="modalProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form id="productAddOrEdit" method="post">
-
+                <form id="productAddOrEdit" method="post" novalidate="novalidate">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Create Product</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
@@ -295,6 +303,7 @@
 
     <!-- Bootstrap core JavaScript-->
     <script src="<?= base_url('assets/jquery/jquery.min.js'); ?>"></script>
+    <script src="<?= base_url('assets/jquery/jquery.validate.min.js'); ?>"></script>  
     <script src="<?= base_url('assets/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
 
     <!-- Core plugin JavaScript-->
@@ -303,14 +312,9 @@
     <!-- Custom scripts for all pages-->
     <script src="<?= base_url('js/sb-admin-2.min.js'); ?>"></script>
 
-
     <!-- Page level plugins -->
     <script src="<?= base_url('assets/datatables/jquery.dataTables.min.js'); ?>"></script>
     <script src="<?= base_url('assets/datatables/dataTables.bootstrap4.min.js'); ?>"></script>
-
-    <!-- Page level custom scripts -->
-    <!-- <script src="<?php //base_url('js/demo/datatables-demo.js'); 
-                        ?>"></script> -->
     <script src="<?= base_url('js/script.js'); ?>"></script>
 </body>
 

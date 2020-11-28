@@ -10,7 +10,7 @@ class Product_model extends CI_Model {
     $this->db->select('p.id,p.name,p.status,p.slug,p.description,p.created_at,c.name as category');
     $this->db->from('products as p');
     $this->db->join('categories as c', 'c.id = p.category_id');
-    $this->db->order_by('p.id', 'DESC');
+    // $this->db->order_by('p.id', 'DESC');
   }
   
   public function getAllProducts(){
