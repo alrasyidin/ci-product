@@ -48,22 +48,12 @@ class Product extends CI_Controller {
   public function store(){
     $product = $this->input->post();
     
-    // $this->form_validation->set_rules('name', 'Name', 'required');
-    // $this->form_validation->set_rules('description', 'Description', 'required');
-    // $this->form_validation->set_rules('status', 'Status', 'required');
-    // $this->form_validation->set_rules('category_id', 'Category', 'required');
-    
     $product['slug'] = $this->slug->create_uri($product);
     
-    // if ($this->form_validation->run() == TRUE){
-      $result = $this->productModel->storeProduct($product);
-      if($result){
-        echo json_encode(['status' => 'success', 'message' => 'Store product succesfully', 'data' => $result]);
-      }
-    // }else {
-    //   echo json_encode($this->form_validation);
-    //   echo json_encode(['errors' => validation_errors()]);
-    // }
+    $result = $this->productModel->storeProduct($product);
+    if($result){
+      echo json_encode(['status' => 'success', 'message' => 'Store product succesfully', 'data' => $result]);
+    }
   }
   
   public function delete(){

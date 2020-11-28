@@ -267,7 +267,7 @@
                         </div>
                         <div class="form-group">
                             <label for="description">Description: </label>
-                            <textarea class="form-control" type="text" name="description" id="description"></textarea>
+                            <textarea class="form-control" type="text" name="description" id="description" rows="7"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="status">Status: </label>

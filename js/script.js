@@ -59,98 +59,6 @@ $(document).ready(function () {
 	}
 
 	function showAllProduct() {
-		// $('#loading').hide();
-		$.ajax({
-			url: `${window.base_url}/product/getData`,
-			type: "ajax",
-			async: true,
-			dataType: "json",
-			beforeSend: function () {
-				let loader = `
-					<div class="wrapperLoading">
-					<div class="my-5">
-						<i class="fas fa-circle-notch fa-spin fa-5x"></i>
-					</div>
-					</div>
-				`;
-				$("body").prepend(loader);
-			},
-			complete: function () {
-				$(".wrapperLoading").remove();
-
-				$(".item-record").click(function (e) {
-					$(e.currentTarget)
-						.find(".deleteCheckbox")
-						.each((id, item) => (item.checked = !item.checked));
-				});
-
-				// load data table
-				// $("#dataTable").DataTable()
-			},
-			success: function (response) {
-				let products = response.data.products;
-				let categories = response.data.categories;
-				let htmlRaw = "";
-
-				let id = 0;
-				products.forEach((product) => {
-					htmlRaw += `
-						<tr class="item-record">
-							<td>
-							<div class="custom-control custom-checkbox">
-									<input class="custom-control-input deleteCheckbox" id="product-checked-${
-										product.id
-									}" type="checkbox" title="Check this item" id="checkAll" data-id="${
-						product.id
-					}">
-									<label class="custom-control-label" for="product-checked-${product.id}"></label>
-							</div>
-							</td>
-              <td>${++id}</td>
-              <td>${product.id + "." + firstLetterCapital(product.name)}</td>
-              <td>${
-								product.description.split(" ").length > 7
-									? product.description.split(" ").slice(0, 10).join(" ") +
-									  "..."
-									: firstLetterCapital(product.description)
-							} </td>
-							<td>${firstLetterCapital(product.category)}</td>
-							
-              <td>${
-								product.status == true
-									? '<span class="badge badge-primary">Active</span>'
-									: '<span class="badge badge-danger">Non Active</span>'
-							}</td>
-              <td>${getDateFormatID(product.created_at)}</td>
-              <td class="d-flex">
-                <button data-id="${
-									product.id
-								}" class="btn btn-warning btn-sm product-edit">EDIT</button>
-              </td>
-            </tr>
-          `;
-				});
-
-				let categoryOption = "";
-
-				categories.forEach((category) => {
-					categoryOption += `
-						<option value="${category.id}">${category.name}</option>
-					`;
-				});
-
-				$("#show_data").html(htmlRaw);
-
-				$("#category").append(categoryOption);
-
-				// dataTable.destroy();
-				// dataTable.draw();
-			},
-		});
-	}
-
-	function showAllProduct2() {
-		let i = 0;
 		$("#dataTable").DataTable({
 			processing: true,
 			// serverSide: true,
@@ -251,7 +159,7 @@ $(document).ready(function () {
 	}
 
 	// display all product with ajax
-	showAllProduct2();
+	showAllProduct();
 
 	// add item to record using modal
 	$("#productAddOrEdit").submit(function (e) {
