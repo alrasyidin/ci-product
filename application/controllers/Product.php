@@ -19,13 +19,21 @@ class Product extends CI_Controller {
   public function index(){
     $this->load->view('product/index.php');
   }
+
   public function getData()
   {
     $products = $this->productModel->getAllProducts();
     $categories = $this->categoryModel->getAllCategories();
 
-    echo json_encode(['status' => 'success', 'message' => 'Store product succesfully', 'data' => ['products' => $products, 'categories' => $categories]]);
-    
+    echo json_encode(['status' => 'success', 'message' => 'Store product succesfully', 'data' => ['products' => $products, 'categories' => $categories]]);  
+  }
+
+  public function getDataById()
+  {
+    $id = $this->input->post('id');
+
+    $result = $this->productModel->getById($id);
+    echo json_encode($result);
   }
 
   public function store(){
@@ -43,9 +51,7 @@ class Product extends CI_Controller {
     $id = json_decode($this->input->post('ids'));
     
     $result = $this->productModel->deleteProduct($id);
-    // echo json_encode($id);
-    // echo json_encode($result);
-    // die();
+    
     if($result){
       echo json_encode(['status' => 'success', 'message' => 'Record selected product deleted successfully']);
     } else {

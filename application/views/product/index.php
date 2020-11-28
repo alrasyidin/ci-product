@@ -160,7 +160,7 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Product</h1>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalProduct">Create a Product</button>
+                        <button type="button" class="btn btn-primary" id="btnCreate">Create a Product</button>
                     </div>
 
                     <!-- Content Row -->
@@ -266,7 +266,7 @@
     <div class="modal fade" id="modalProduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form id="productAdd" method="post">
+                <form id="productAddOrEdit" method="post">
 
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Create Product</h5>
@@ -302,8 +302,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button class="btn btn-secondary" id="modalCancel" type="button" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="btnSaveOrUpdate">Save</button>
                     </div>
 
                 </form>

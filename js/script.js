@@ -49,6 +49,10 @@ $(document).ready(function () {
 
 				// load data table
 				$("#dataTable").DataTable()
+
+				$(".item-record").click(function(e){
+					$(e.currentTarget).find('.deleteCheckbox').each((id, item) => item.checked = !item.checked)
+				})
 			},
 			success: function (response) {
 				let products = response.data.products;
@@ -58,7 +62,7 @@ $(document).ready(function () {
 				let id = 0;
 				products.forEach((product) => {
 					htmlRaw += `
-						<tr>
+						<tr class="item-record">
 							<td>
 							<div class="custom-control custom-checkbox">
 									<input class="custom-control-input deleteCheckbox" id="product-checked-${product.id}" type="checkbox" title="Check this item" id="checkAll" data-id="${product.id}">
@@ -82,9 +86,7 @@ $(document).ready(function () {
 							}</td>
               <td>${getDateFormatID(product.created_at)}</td>
               <td class="d-flex">
-                <button id="${
-									product.id
-								}" class="btn btn-warning btn-sm product-edit">EDIT</button>
+                <button id="${ product.id }" class="btn btn-warning btn-sm product-edit">EDIT</button>
               </td>
             </tr>
           `;
@@ -105,17 +107,26 @@ $(document).ready(function () {
 			},
 		});
 	}
+
+	function update(){
+
+	}
+
+	function store(){
+		ajax(`${window.base_url}/product/store`, data, function (response) {
+			let data = JSON.parse(response);
+
+			if (data.status == "success") {
+				showAllProduct()
+			}
+		});
+	}
 	
 	// display all product with ajax
 	showAllProduct();
-	
-	// init datatable
-	// $("#dataTable").DataTable(
-	// 	// 'order': [[ 1, 'asc' ]]
-	// );
 
 	// add item to record using modal
-	$("#productAdd").submit(function (e) {
+	$("#productAddOrEdit").submit(function (e) {
 		e.preventDefault();
 		let data = new FormData();
 		let form = e.target.elements;
@@ -124,14 +135,6 @@ $(document).ready(function () {
 		data.append("status", $(form["status"]).val());
 		data.append("description", $(form["description"]).val());
 		data.append("category_id", $(form["category_id"]).val());
-
-		ajax(`${window.base_url}/product/store`, data, function (response) {
-			let data = JSON.parse(response);
-
-			if (data.status == "success") {
-				showAllProduct()
-			}
-		});
 
 		cleanFormValue(form);
 		$("#modalProduct").modal("hide");
@@ -149,7 +152,7 @@ $(document).ready(function () {
 			})
 		}
 	})
-
+	
 	// delete item selected using checkbox
 	$("#deleteCheckedRecord").click(function (e) {
 		let itemsCheckbox = Array.from($('.deleteCheckbox:checked'))
@@ -167,12 +170,12 @@ $(document).ready(function () {
 				let data = new FormData();
 				data.append(`ids`, JSON.stringify(ids));
 
-				let datatable = $('#dataTable').DataTable()
-
 				ajax(`${window.base_url}/product/delete`, data, function (response) {
 					
-					// delete item from ui
-					$('#dataTable').DataTable().rows($('.deleteCheckbox:checked').parents('tr')).remove().draw()
+					// refresh 
+					showAllProduct();
+					// $('#dataTable').DataTable().rows($('.deleteCheckbox:checked').parents('tr')).remove().draw()
+					
 				});
 			} else {
 				console.log("cancel");
@@ -181,4 +184,48 @@ $(document).ready(function () {
 			alert('Please check any item record')
 		}
 	});
+
+	// edit data to ui
+	setTimeout(function(){
+		$('.product-edit').on('click', function(e){
+			e.preventDefault()
+			e.stopPropagation()
+			let id = $(e.target).data('id')
+
+			let form =  $('#productAddOrEdit')[0].elements
+
+			$.ajax({
+				url: `${window.base_url}/product/getDataById`,
+				data: {id: id},
+				type: 'ajax',
+				async: true,
+				dataType: "json",
+				success: function(response){
+					console.log(response)
+					$(form.name).val(response.name)
+					$(form.description).val(response.description)
+					$(form.status).val(response.status)
+					$(form.category_id).val(response.category_id)
+
+					$('#modalProduct').modal('show')
+					$('#exampleModalLabel').text('Update Product')
+					$('#btnSaveOrUpdate').text('Update')
+				}
+			})
+		})
+	}, 1000)
+
+	$('#btnCreate').on('click', function(){
+		$('#exampleModalLabel').text('Create a Product')
+		$('#btnSaveOrUpdate').text('Save')
+
+		$('#modalProduct').modal('show')
+	})
+
+	$('#modalCancel,.close').on('click', function(e){
+		let form =  $('#productAddOrEdit')[0].elements
+		cleanFormValue(form)
+
+		$('#modalProduct').modal('hide')
+	})
 });

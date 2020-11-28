@@ -18,6 +18,10 @@ class Product_model extends CI_Model {
     return $this->db->get()->result();
   }
 
+  public function getById($id){
+      return $this->db->get('products', ['id' => $id])->result()[0];
+  }
+
   public function storeProduct($data){
     $save = $this->db->insert('products', $data);
     if($save){
