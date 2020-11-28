@@ -206,28 +206,6 @@
                                             </tr>
                                         </tfoot>
                                         <tbody id="show_data">
-                                            <?php //foreach ($products as $product): 
-                                            ?>
-                                            <!-- <tr>
-                                                <td><?php //$product->id 
-                                                    ?></td>
-                                                <td><?phpu//cfirst($product->name)?></td>
-                                                <td><?php //(strlen($product->description) > 50) ? substr($product->description, 0, 100) . '...' : $product->description
-                                                    ?></td>
-                                                <td><?php //ucfirst($product->category) 
-                                                    ?></td>
-                                                <td><?php //product->status ? '<span class="badge badge-primary">Active</span>' : '<span class="badge badge-danger">Non Active</span>'
-                                                    ?></td>
-                                                <td><?phpd//ate('d-m-Y', time($product->created_at));?></td>
-                                                <td class="d-flex">
-                                                    <button class="btn btn-danger btn-sm product-delete mr-2" data-id="<?php //$product->id 
-                                                                                                                        ?>">DELETE</button>
-                                                    <button id="product-<?php //$product->id 
-                                                                        ?>" class="btn btn-warning btn-sm product-edit">EDIT</button>
-                                                </td>
-                                            </tr> -->
-                                            <?php //endforeach;
-                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -301,6 +279,7 @@
                             </select>
                         </div>
                     </div>
+                    <input type="hidden" name="id">
                     <div class="modal-footer">
                         <button class="btn btn-secondary" id="modalCancel" type="button" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" id="btnSaveOrUpdate">Save</button>

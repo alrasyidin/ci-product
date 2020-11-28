@@ -19,7 +19,8 @@ class Product_model extends CI_Model {
   }
 
   public function getById($id){
-      return $this->db->get('products', ['id' => $id])->result()[0];
+      $this->db->where('id', $id);
+      return $this->db->get('products')->result()[0];
   }
 
   public function storeProduct($data){
@@ -42,6 +43,11 @@ class Product_model extends CI_Model {
     }else {
       return 'Ids data is empty';
     }
+  }
+
+  public function updateProduct($data, $id){
+      $this->db->where('id', $id);
+      return $this->db->update('products', $data);
   }
 }
 

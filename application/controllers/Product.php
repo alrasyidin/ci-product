@@ -28,10 +28,8 @@ class Product extends CI_Controller {
     echo json_encode(['status' => 'success', 'message' => 'Store product succesfully', 'data' => ['products' => $products, 'categories' => $categories]]);  
   }
 
-  public function getDataById()
+  public function getDataById($id)
   {
-    $id = $this->input->post('id');
-
     $result = $this->productModel->getById($id);
     echo json_encode($result);
   }
@@ -57,6 +55,19 @@ class Product extends CI_Controller {
     } else {
       echo json_encode(['status' => 'success', 'message' => 'Record selected product failed to deleted, '.$result]);
     }
+  }
+
+  public function update($id){
+      $product = $this->input->post();
+      
+      $result  = $this->productModel->updateProduct($product, $id);
+
+      if($result){
+        echo json_encode(['status' => 'success', 'message' => 'Record selected product deleted successfully']);
+      } else {
+        echo json_encode(['status' => 'success', 'message' => 'Record selected product deleted successfully, '.$result]);
+      }
+      
   }
 }
 

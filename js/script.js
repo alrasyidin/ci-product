@@ -86,7 +86,7 @@ $(document).ready(function () {
 							}</td>
               <td>${getDateFormatID(product.created_at)}</td>
               <td class="d-flex">
-                <button id="${ product.id }" class="btn btn-warning btn-sm product-edit">EDIT</button>
+                <button data-id="${ product.id }" class="btn btn-warning btn-sm product-edit">EDIT</button>
               </td>
             </tr>
           `;
@@ -108,11 +108,17 @@ $(document).ready(function () {
 		});
 	}
 
-	function update(){
-
+	function update(data, id){
+		ajax(`${window.base_url}/product/update/${id}`, data, function (response) {
+			let data = JSON.parse(response);
+	
+			if (data.status == "success") {
+				showAllProduct()
+			}
+		});
 	}
 
-	function store(){
+	function store(data){
 		ajax(`${window.base_url}/product/store`, data, function (response) {
 			let data = JSON.parse(response);
 
@@ -131,11 +137,19 @@ $(document).ready(function () {
 		let data = new FormData();
 		let form = e.target.elements;
 
-		data.append("name", $(form["name"]).val());
-		data.append("status", $(form["status"]).val());
-		data.append("description", $(form["description"]).val());
-		data.append("category_id", $(form["category_id"]).val());
-
+		data.append("name", $(form.name).val());
+		data.append("status", $(form.status).val());
+		data.append("description", $(form.description).val());
+		data.append("category_id", $(form.category_id).val());
+		
+		if($(e.target).find('#btnSaveOrUpdate').text() == 'Save'){
+			store(data)
+		} else {
+			let id =  $(form.id).val()
+			
+			update(data, id)
+		}
+		
 		cleanFormValue(form);
 		$("#modalProduct").modal("hide");
 	});
@@ -191,21 +205,21 @@ $(document).ready(function () {
 			e.preventDefault()
 			e.stopPropagation()
 			let id = $(e.target).data('id')
+			console.log(id)
 
 			let form =  $('#productAddOrEdit')[0].elements
 
 			$.ajax({
-				url: `${window.base_url}/product/getDataById`,
-				data: {id: id},
+				url: `${window.base_url}/product/getDataById/${id}`,
 				type: 'ajax',
 				async: true,
 				dataType: "json",
 				success: function(response){
-					console.log(response)
 					$(form.name).val(response.name)
 					$(form.description).val(response.description)
 					$(form.status).val(response.status)
 					$(form.category_id).val(response.category_id)
+					$(form.id).val(response.id)
 
 					$('#modalProduct').modal('show')
 					$('#exampleModalLabel').text('Update Product')
