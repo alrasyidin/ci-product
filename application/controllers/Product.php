@@ -40,12 +40,16 @@ class Product extends CI_Controller {
   }
   
   public function delete(){
-    $id = $this->input->post('id');
+    $id = json_decode($this->input->post('ids'));
     
     $result = $this->productModel->deleteProduct($id);
-  
+    // echo json_encode($id);
+    // echo json_encode($result);
+    // die();
     if($result){
-      echo json_encode(['status' => 'success', 'message' => 'This product deleted successfully']);
+      echo json_encode(['status' => 'success', 'message' => 'Record selected product deleted successfully']);
+    } else {
+      echo json_encode(['status' => 'success', 'message' => 'Record selected product failed to deleted, '.$result]);
     }
   }
 }

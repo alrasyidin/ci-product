@@ -30,8 +30,14 @@ class Product_model extends CI_Model {
     }
   }
 
-  public function deleteProduct($id){
-    return $this->db->delete('products', ['id' => $id]);
+  public function deleteProduct($ids){
+    if(!empty($ids)){
+      $this->db->where_in('id', $ids);
+      return $this->db->delete('products');
+      // $this->db->last_query();
+    }else {
+      return 'Ids data is empty';
+    }
   }
 }
 

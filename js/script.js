@@ -18,6 +18,14 @@ $(document).ready(function () {
 		$(form["description"]).val("");
 		$(form["category_id"]).val("");
 	}
+	function firstLetterCapital(word) {
+		return word[0].toUpperCase() + word.slice(1);
+	}
+
+	function getDateFormatID(date) {
+		let dateStr = new Date(date);
+		return new Intl.DateTimeFormat("id-ID").format(dateStr);
+	}
 
 	function showAllProduct() {
 		// $('#loading').hide();
@@ -26,7 +34,7 @@ $(document).ready(function () {
 			type: "ajax",
 			async: true,
 			dataType: "json",
-			beforeSend: function(){
+			beforeSend: function () {
 				let loader = `
 					<div class="wrapperLoading">
 					<div class="my-5">
@@ -36,31 +44,44 @@ $(document).ready(function () {
 				`;
 				$("body").prepend(loader);
 			},
-			complete: function(){
-				$(".wrapperLoading").remove()
+			complete: function () {
+				$(".wrapperLoading").remove();
+
+				// load data table
+				$("#dataTable").DataTable()
 			},
 			success: function (response) {
 				let products = response.data.products;
+				let categories = response.data.categories;
 				let htmlRaw = "";
 
+				let id = 0;
 				products.forEach((product) => {
 					htmlRaw += `
-            <tr>
-              <td>${product.id}</td>
-              <td>${product.name}</td>
-              <td width="25">${
+						<tr>
+							<td>
+							<div class="custom-control custom-checkbox">
+									<input class="custom-control-input deleteCheckbox" id="product-checked-${product.id}" type="checkbox" title="Check this item" id="checkAll" data-id="${product.id}">
+									<label class="custom-control-label" for="product-checked-${product.id}"></label>
+							</div>
+							</td>
+              <td>${++id}</td>
+              <td>${product.id + '.' + firstLetterCapital(product.name)}</td>
+              <td>${
 								product.description.split(" ").length > 7
 									? product.description.split(" ").slice(0, 10).join(" ") +
 									  "..."
-									: product.description
+									: firstLetterCapital(product.description)
 							} </td>
-              <td>${product.category}</td>
-              <td>${product.status}</td>
-              <td>${product.created_at}</td>
+							<td>${firstLetterCapital(product.category)}</td>
+							
+              <td>${
+								product.status == true
+									? '<span class="badge badge-primary">Active</span>'
+									: '<span class="badge badge-danger">Non Active</span>'
+							}</td>
+              <td>${getDateFormatID(product.created_at)}</td>
               <td class="d-flex">
-                <button class="btn btn-danger btn-sm product-delete mr-2" data-id="${
-									product.id
-								}">DELETE</button>
                 <button id="${
 									product.id
 								}" class="btn btn-warning btn-sm product-edit">EDIT</button>
@@ -69,13 +90,31 @@ $(document).ready(function () {
           `;
 				});
 
+				let categoryOption = ""
+
+				categories.forEach((category) => {
+					categoryOption += `
+						<option value="${category.id}">${category.name}</option>
+					`
+				})
+				
 				$("#show_data").html(htmlRaw);
+
+				
+				$("#category").append(categoryOption);
 			},
 		});
 	}
-
+	
+	// display all product with ajax
 	showAllProduct();
+	
+	// init datatable
+	// $("#dataTable").DataTable(
+	// 	// 'order': [[ 1, 'asc' ]]
+	// );
 
+	// add item to record using modal
 	$("#productAdd").submit(function (e) {
 		e.preventDefault();
 		let data = new FormData();
@@ -87,9 +126,10 @@ $(document).ready(function () {
 		data.append("category_id", $(form["category_id"]).val());
 
 		ajax(`${window.base_url}/product/store`, data, function (response) {
-			if (response.status === "success") {
-				console.log(response);
-				alert(response.message);
+			let data = JSON.parse(response);
+
+			if (data.status == "success") {
+				showAllProduct()
 			}
 		});
 
@@ -97,17 +137,48 @@ $(document).ready(function () {
 		$("#modalProduct").modal("hide");
 	});
 
-	$(".product-delete").click(function (e) {
-		if (confirm("Are you sure delete this item")) {
-			let id = $(this).data("id");
-			let data = new FormData();
-			data.append("id", id);
-
-			ajax(`${window.base_url}/product/delete`, data, function (response) {
-				console.log(response);
-			});
+	// check all record if clicked
+	$('#checkAll').on('click', function(e) {
+		if(e.currentTarget.checked){
+			$('.deleteCheckbox').each(function(index, item){
+				item.checked = true
+			})
 		} else {
-			console.log("cancel");
+			$('.deleteCheckbox').each(function(index, item){
+				item.checked = false
+			})
+		}
+	})
+
+	// delete item selected using checkbox
+	$("#deleteCheckedRecord").click(function (e) {
+		let itemsCheckbox = Array.from($('.deleteCheckbox:checked'))
+		let isAnyChecked = itemsCheckbox.some(function(item) {
+				return item.checked
+		})
+
+		if(isAnyChecked){
+			if (confirm(`Are you sure delete ${itemsCheckbox.length} item`)) {
+				let ids = itemsCheckbox.map(function(item) {
+					return $(item).data('id')
+				})
+
+				
+				let data = new FormData();
+				data.append(`ids`, JSON.stringify(ids));
+
+				let datatable = $('#dataTable').DataTable()
+
+				ajax(`${window.base_url}/product/delete`, data, function (response) {
+					
+					// delete item from ui
+					$('#dataTable').DataTable().rows($('.deleteCheckbox:checked').parents('tr')).remove().draw()
+				});
+			} else {
+				console.log("cancel");
+			}
+		} else {
+			alert('Please check any item record')
 		}
 	});
 });

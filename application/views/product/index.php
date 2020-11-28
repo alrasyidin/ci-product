@@ -19,13 +19,13 @@
     <link href="<?= base_url('css/sb-admin-2.min.css'); ?>" rel="stylesheet">
     <link href="<?= base_url('assets/datatables/dataTables.bootstrap4.min.css'); ?>" rel="stylesheet">
     <style>
-        .wrapperLoading{
+        .wrapperLoading {
             position: fixed;
             z-index: 99999999999;
             width: 100%;
             height: 100vh;
             overflow: hidden;
-            background-color: rgba(0,0,0,.3);
+            background-color: rgba(0, 0, 0, .3);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -168,13 +168,22 @@
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4 w-100">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">All Products</h6>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="m-0 font-weight-bold text-primary">All Products</h6>
+                                    <button class="btn btn-danger btn-sm product-delete mr-2" id="deleteCheckedRecord">DELETE</button>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
+                                                <th>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input class="custom-control-input" type="checkbox" title="Check all to mark all record" id="checkAll">
+                                                        <label class="custom-control-label" for="checkAll"></label>
+                                                    </div>
+                                                </th>
                                                 <th>ID</th>
                                                 <th>Name</th>
                                                 <th>Description</th>
@@ -186,6 +195,7 @@
                                         </thead>
                                         <tfoot>
                                             <tr>
+                                                <th></th>
                                                 <th>ID</th>
                                                 <th>Name</th>
                                                 <th>Description</th>
@@ -285,9 +295,9 @@
                             <label for="category">Category: </label>
                             <select class="form-control" name="category_id" id="category">
                                 <option value="" disabled selected>--- Category ---</option>
-                                <?php foreach ($categories as $category) : ?>
+                                <!-- <?php foreach ($categories as $category) : ?>
                                     <option value="<?= $category->id ?>"><?= ucfirst($category->name) ?></option>
-                                <?php endforeach; ?>
+                                <?php endforeach; ?> -->
                             </select>
                         </div>
                     </div>
@@ -320,7 +330,8 @@
     <script src="<?= base_url('assets/datatables/dataTables.bootstrap4.min.js'); ?>"></script>
 
     <!-- Page level custom scripts -->
-    <script src="<?= base_url('js/demo/datatables-demo.js'); ?>"></script>
+    <!-- <script src="<?php //base_url('js/demo/datatables-demo.js'); 
+                        ?>"></script> -->
     <script src="<?= base_url('js/script.js'); ?>"></script>
 </body>
 
